@@ -1,3 +1,16 @@
+# Additional files
+/venv/*
+/data/*
+/figures/*
+/plots/*
+/results/*
+/.vscode/*
+/dist/*
+/logs/*
+secret.py
+.DS_Store
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
