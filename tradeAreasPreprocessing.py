@@ -76,14 +76,13 @@ class tradeAreasPreprocessing():
         return df
     
     def get_trip_geometry(self, response_df, crs='EPSG:4326'):
-        # old codes
         start_pts = gpd.points_from_xy(response_df['startLoc'].str.split(',').str[1], response_df['startLoc'].str.split(',').str[0])
         end_pts = gpd.points_from_xy(response_df['endLoc'].str.split(',').str[1], response_df['endLoc'].str.split(',').str[0])
         trip_lines = [shapely.geometry.LineString([start_pt, end_pt]) for start_pt, end_pt in zip(start_pts, end_pts)]
         trips_gdf = gpd.GeoDataFrame(response_df, geometry=trip_lines, crs=crs)
         return trips_gdf[['tripId','geometry']]
 
-    def get_mulitline_trip_geometry(self, response_df, departure_time, crs='EPSG:4326'):
+    def get_mulitline_trip_geometry(self, response_df, departure_time=None, crs='EPSG:4326'):
         start_pts = gpd.points_from_xy(response_df['startLoc'].str.split(',').str[1], response_df['startLoc'].str.split(',').str[0])
         end_pts = gpd.points_from_xy(response_df['endLoc'].str.split(',').str[1], response_df['endLoc'].str.split(',').str[0])
         all_trip_points = [get_inrix_route(start_pt, end_pt, departure_time)['points'] for start_pt, end_pt in zip(start_pts, end_pts)]
