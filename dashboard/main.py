@@ -17,7 +17,3 @@ if __name__ == '__main__':
     request_handler = AppService()
     app = App(request_handler)
     app.run()
-
-
-
-
