@@ -4,6 +4,8 @@ import geopandas as gpd
 from shapely.geometry import LineString, MultiLineString
 from pygris import tracts
 import shapely
+import streamlit as st
+
 
 
 class tradeAreasPreprocessing():
@@ -57,6 +59,7 @@ class tradeAreasPreprocessing():
         """
         Create dataframe from data
         """
+        # st.write(data)
         df = pd.DataFrame.from_dict(data['data'])
         return df
     def separate_coordinates(self, df):

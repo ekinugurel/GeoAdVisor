@@ -3,7 +3,7 @@ from datetime import time
 import pandas as pd
 import numpy as np
 import geopandas as gpd
-import dashboard.pages.tradeAreaProcessing as tap
+import dashboard.tradeAreaProcessing as tap
 import folium
 
 

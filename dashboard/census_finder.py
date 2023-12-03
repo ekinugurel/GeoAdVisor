@@ -2,7 +2,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 
 # Location of the GeoJSON file
-geojson_location = "./dashboard/pages/sf-tracts-2020-GEOID.geojson"
+geojson_location = "sf-tracts-2020-GEOID.geojson"
 
 # Load the GeoJSON file into a GeoDataFrame
 gdf = gpd.read_file(geojson_location)
