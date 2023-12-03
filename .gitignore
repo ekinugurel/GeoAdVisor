@@ -1,6 +1,11 @@
 inrix_token.txt
 weather_token.txt
 census_data/
+google_routing.csv
+intersected_demographics.csv
+origin_demographics.csv
+totals_for_kaitlyn.csv
+google_routing_api_key.txt
 
 # Additional files
 /venv/*
