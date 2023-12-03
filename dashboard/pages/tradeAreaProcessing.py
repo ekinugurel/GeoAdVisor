@@ -135,12 +135,14 @@ class tradeAreasPreprocessing():
         ca_tiger = tracts(state=state, cache=True, year=year).to_crs(epsg=epsg)
         ca_tiger = ca_tiger[ca_tiger['COUNTYFP']==county]
         return ca_tiger[['GEOID','geometry']]
-    def intersectedTrips(self, trip_geo_lookup, sf_geo_lookup):
+    def intersectedTrips(self, trip_geo_lookup, sf_geo_lookup, sample_n=1000):
         """
         Find intersected trips
         """
-        intersected_trips = gpd.sjoin(trip_geo_lookup, sf_geo_lookup, how='inner', predicate='intersects')[['tripId','GEOID']].sort_values(['tripId','GEOID'])
+        intersected_trips = gpd.sjoin(trip_geo_lookup, sf_geo_lookup, how='inner', predicate='intersects')#[['tripId','GEOID']].sort_values(['tripId','GEOID'])
+        intersected_trips = intersected_trips.drop_duplicates()
         intersected_trips = pd.merge(intersected_trips, sf_geo_lookup, on='GEOID', how='inner')
         intersected_trips = pd.merge(intersected_trips, trip_geo_lookup, on='tripId', how='inner')
-        intersected_trips['line_locs'] = intersected_trips.apply(lambda x: self.poly_locate_line_points(x['geometry_y'], x['geometry_x']), axis=1)
+        intersected_trips = intersected_trips.sample(sample_n)
+        intersected_trips['line_locs'] = intersected_trips.apply(lambda x: self.poly_locate_line_points(x['geometry_x'], x['geometry_y']), axis=1)
         return intersected_trips
