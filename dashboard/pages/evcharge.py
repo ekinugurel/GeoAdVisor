@@ -5,7 +5,7 @@ from shapely.geometry import Point
 import geopandas
 import matplotlib.pyplot as plt
 
-st.title('EV Chargers Use Case 🔋')
+st.title('Last Stop Analysis')
 
 # Function to initialize map
 def init_map(center=[37.76, -122.4], zoom_start=12, map_type="OpenStreetMap"):
