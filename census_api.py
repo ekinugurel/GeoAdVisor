@@ -92,7 +92,7 @@ def census_api_query():
 
 # convert #'s to percentages in df for sampling to population
 def clean_api_data(df):
-    clean_df = df[["tract", "Median Household Income"]]
+    clean_df = df[["tract","Median Household Income"]]
     clean_df["total_pop"] = df["Total Population"]
     clean_df["pct_female"] = df["Female Population"]/df["Total Population"]
     clean_df["pct_male"] = df["Male Population"]/df["Total Population"]
@@ -108,8 +108,6 @@ def clean_api_data(df):
 
     clean_df.to_csv('/Users/kaitlynng/Desktop/Coding/GeoAdVisor/census_data/census_data_clean.csv', index=False)
     print("Success!")
-
-
 
 def main():
     df = census_api_query()
