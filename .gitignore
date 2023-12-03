@@ -1,3 +1,6 @@
+inrix_token.txt
+weather_token.txt
+
 # Additional files
 /venv/*
 /data/*
