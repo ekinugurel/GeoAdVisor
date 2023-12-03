@@ -78,15 +78,17 @@ class tradeAreasPreprocessing():
         Add mode to dataframe using tripMeanSpeedKPH
         """ 
         mode = []
-        if df['tripMeanSpeedKPH'] <= 10 and df['tripMeanSpeedKPH'] > 0:
-            mode.append('walk')
-        elif df['tripMeanSpeedKPH'] <= 20 and df['tripMeanSpeedKPH'] > 10:
-            mode.append('bike')
-        elif df['tripMeanSpeedKPH'] <= 30 and df['tripMeanSpeedKPH'] > 20:
-            mode.append('bus')
-        elif df['tripMeanSpeedKPH'] > 30:
-            mode.append('car')
-
+        for i in df['tripMeanSpeedKPH']:
+            if i == 0:
+                mode.append('stop')
+            elif (i <= 10) and (i > 0):
+                mode.append('walk')
+            elif (i <= 20) and (i > 10):
+                mode.append('bike')
+            elif (i <= 30) and (i > 20):
+                mode.append('bus')
+            elif i > 30:
+                mode.append('car')
         df['mode'] = mode
         return df
     
@@ -115,5 +117,5 @@ class tradeAreasPreprocessing():
         intersected_trips = gpd.sjoin(trip_geo_lookup, sf_geo_lookup, how='inner', predicate='intersects')[['tripId','GEOID']].sort_values(['tripId','GEOID'])
         intersected_trips = pd.merge(intersected_trips, sf_geo_lookup, on='GEOID', how='inner')
         intersected_trips = pd.merge(intersected_trips, trip_geo_lookup, on='tripId', how='inner')
-        intersected_trips['line_locs'] = intersected_trips.apply(lambda x: self.poly_locate_line_points(x['geometry_x'], x['geometry_y']), axis=1)
+        intersected_trips['line_locs'] = intersected_trips.apply(lambda x: self.poly_locate_line_points(x['geometry_y'], x['geometry_x']), axis=1)
         return intersected_trips    

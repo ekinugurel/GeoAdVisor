@@ -1,5 +1,6 @@
 inrix_token.txt
 weather_token.txt
+census_data/
 
 # Additional files
 /venv/*
