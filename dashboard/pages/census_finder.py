@@ -2,7 +2,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 
 # Location of the GeoJSON file
-geojson_location = "sf-tracts-2020-GEOID.geojson"
+geojson_location = "./dashboard/pages/sf-tracts-2020-GEOID.geojson"
 
 # Load the GeoJSON file into a GeoDataFrame
 gdf = gpd.read_file(geojson_location)
@@ -21,7 +21,7 @@ def get_census_tract_info(latitude, longitude):
                 "TRACTCE20": row['TRACTCE20'],
                 "GEOID": row['GEOID'],
             }
-    return "No census tract found for the given coordinates."
+    return {"TRACTCE20": None, "GEOID": None}
 
 # Example usage
 latitude = 37.7749  # Replace with actual latitude
