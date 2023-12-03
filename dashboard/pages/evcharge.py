@@ -1,34 +1,54 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+import folium
+from shapely.geometry import Point
+import geopandas
 
 st.title('EV Chargers Use Case 🔋')
 
-#### TUTORIAL CODE ###
-st.title('Session State')
-"st.session_state_object: ", st.session_state
-number = st.slider('A number', 1, 10, key = 'slider')
-st.write(st.session_state)
+# Function to initialize map
+def init_map(center=[37.76, -122.4], zoom_start=12, map_type="OpenStreetMap"):
+    return folium.Map(location=center, zoom_start=zoom_start, tiles=map_type)
 
-col1, buff, col2 = st.columns([1, 0.5, 3])
-option_names = ['a', 'b', 'c']
-next = st.button("next option")
+# Function to create a GeoDataFrame from a DataFrame
+def create_point_map(df):
+    df[['Latitude', 'Longitude']] = df[['Latitude', 'Longitude']].apply(pd.to_numeric, errors='coerce')
+    df['coordinates'] = df.apply(lambda row: Point(row.Longitude, row.Latitude), axis=1)
+    gdf = geopandas.GeoDataFrame(df, geometry='coordinates')
+    return gdf
 
-if next:
-    if st.session_state['radio_option'] == 'a':
-        st.session_state.radio_option = 'b'
-    elif st.session_state['radio_option'] == 'b':
-        st.session_state.radio_option = 'c'
+# Function to plot markers on the Folium map
+def plot_from_df(df, folium_map):
+    gdf = create_point_map(df)
+    for i, row in gdf.iterrows():
+        popup_message = f"Station Name: {row['Station Name']}"  # Customize the popup message here
+        folium.Marker([row['Latitude'], row['Longitude']], popup=folium.Popup(popup_message, parse_html=True)).add_to(folium_map)
+    return folium_map
 
-option = col1.radio("Pick an option", option_names, key = "radio_option")
-st.session_state
+# Sample data
+# data = {
+#     'ID': ['Monkey', 'B'],
+#     'Latitude': ['33.772815', '33.829216'],
+#     'Longitude': ['-84.39043', '-86.92847']
+# }
 
-if option == "A":
-    col2.write("You picked 'a' :smile: ")
+# df = pd.DataFrame(data)
+df = pd.read_csv('./charger_loc.csv')
 
-elif option == "B":
-    col2.write("you picked 'b' :heart: ")
+# Initialize the map and plot markers
+m = init_map()
+m = plot_from_df(df, m)
 
-else:
-    col2.write("hi ")
+# Display the map in Streamlit
+st.write(m)
+
+selected_marker = st.selectbox('Select Marker', df['Station Name'].tolist())
+selected_index = df.index[df['Station Name'] == selected_marker].tolist()[0]
+
+if selected_marker:
+    st.write(f"You selected station: {selected_marker}")
+    st.write(f"Latitude: {df.loc[selected_index, 'Latitude']}, Longitude: {df.loc[selected_index, 'Longitude']}")
+    st.write(f"Number of L2 Chargers: {df.loc[selected_index, 'EV Level2 EVSE Num']}")
+    st.write(f"Charger Provider: {df.loc[selected_index, 'EV Network']}")
+    st.write(f"Access: {df.loc[selected_index, 'Access Code']}")
+
