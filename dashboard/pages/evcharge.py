@@ -3,6 +3,7 @@ import pandas as pd
 import folium
 from shapely.geometry import Point
 import geopandas
+import matplotlib.pyplot as plt
 
 st.title('EV Chargers Use Case 🔋')
 
@@ -47,8 +48,13 @@ selected_index = df.index[df['Station Name'] == selected_marker].tolist()[0]
 
 if selected_marker:
     st.write(f"You selected station: {selected_marker}")
-    st.write(f"Latitude: {df.loc[selected_index, 'Latitude']}, Longitude: {df.loc[selected_index, 'Longitude']}")
-    st.write(f"Number of L2 Chargers: {df.loc[selected_index, 'EV Level2 EVSE Num']}")
+    st.write(f"Charger Provider: {df.loc[selected_index, 'EV Network']}")
+    if df.loc[selected_index, 'EV Level2 EVSE Num'] > 0:
+        st.write(f"Number of L2 Chargers: {int(df.loc[selected_index, 'EV Level2 EVSE Num'])}")
+    if df.loc[selected_index, 'EV DC Fast Count'] > 0:
+        st.write(f"Number of L3 Chargers: {int(df.loc[selected_index, 'EV DC Fast Count'])}")
+    st.write(f"Access: {df.loc[selected_index, 'Access Code']}")
+  
     st.write(f"Charger Provider: {df.loc[selected_index, 'EV Network']}")
     st.write(f"Access: {df.loc[selected_index, 'Access Code']}")
 
